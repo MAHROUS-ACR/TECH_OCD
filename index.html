@@ -404,11 +404,11 @@ firebase.auth().onAuthStateChanged((user) => {
         }
 
         // Add comment
-       function addComment(key) {
+      function addComment(key) {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    const commentInput = document.getElementById('comment-input-${key}');
+    const commentInput = document.getElementById(comment-input-${key});
     const commentText = commentInput.value;
     if (commentText.trim() === '') return;
 
@@ -422,7 +422,7 @@ firebase.auth().onAuthStateChanged((user) => {
 
     // حفظ التعليق في Firebase
     const database = firebase.database();
-    const commentsRef = database.ref('/comments/${key}').push();
+    const commentsRef = database.ref(comments/${key}).push(); // استخدام التعبيرات المتكاملة للسلاسل النصية
     commentsRef.set(comment);
 
     // إضافة التعليق إلى DOM
@@ -435,7 +435,7 @@ firebase.auth().onAuthStateChanged((user) => {
 // دالة لرفع الملفات وحفظ روابط التحميل
 function uploadFiles(commentKey, files) {
     const storageRef = firebase.storage().ref();
-    const commentFilesRef = storageRef.child('comments/${commentKey}'); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const commentFilesRef = storageRef.child(comments/${commentKey}); // استخدام التعبيرات المتكاملة للسلاسل النصية
 
     Array.from(files).forEach(file => {
         const fileRef = commentFilesRef.child(file.name);
@@ -453,7 +453,7 @@ function uploadFiles(commentKey, files) {
 // دالة لحفظ رابط التحميل في قاعدة البيانات الحية في Firebase
 function saveFileURL(commentKey, fileName, downloadURL) {
     const database = firebase.database();
-    const filesRef = database.ref('files/${commentKey}'); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const filesRef = database.ref(files/${commentKey}); // استخدام التعبيرات المتكاملة للسلاسل النصية
     filesRef.push({
         fileName: fileName,
         downloadURL: downloadURL
@@ -463,7 +463,7 @@ function saveFileURL(commentKey, fileName, downloadURL) {
 // دالة لإضافة التعليق إلى DOM وإدارة رفع الملفات
 function addCommentToDOM(key, comment) {
     // إضافة التعليقات كالمعتاد
-    const commentSection = document.getElementById('comments-${key}');
+    const commentSection = document.getElementById(comments-${key});
     const commentDiv = document.createElement('div');
     commentDiv.classList.add('comment');
     commentDiv.innerHTML = `
@@ -486,7 +486,7 @@ function addCommentToDOM(key, comment) {
     commentSection.appendChild(uploadButton);
 
     // عرض روابط الملفات إذا كانت موجودة
-    const filesRef = firebase.database().ref('files/${key}'); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const filesRef = firebase.database().ref(files/${key}); // استخدام التعبيرات المتكاملة للسلاسل النصية
     filesRef.once('value', snapshot => {
         const files = snapshot.val();
         if (files) {
