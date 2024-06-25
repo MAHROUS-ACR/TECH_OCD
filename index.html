@@ -434,7 +434,7 @@ firebase.auth().onAuthStateChanged((user) => {
      // Function to upload files and save download URLs
 function uploadFiles(commentKey, files) {
   const storageRef = firebase.storage().ref();
-  const commentFilesRef = storageRef.child(comments/${commentKey});
+  const commentFilesRef = storageRef.child('comments/${commentKey}');
 
   Array.from(files).forEach(file => {
     const fileRef = commentFilesRef.child(file.name);
@@ -452,7 +452,7 @@ function uploadFiles(commentKey, files) {
 // Function to save download URL to Firebase Realtime Database
 function saveFileURL(commentKey, fileName, downloadURL) {
   const database = firebase.database();
-  const filesRef = database.ref(files/${commentKey});
+  const filesRef = database.ref('files/${commentKey}');
   filesRef.push({
     fileName: fileName,
     downloadURL: downloadURL
@@ -465,7 +465,7 @@ function addCommentToDOM(key, comment) {
   // ...
 
   // Add file upload input and button
-  const commentSection = document.getElementById(comment-${key});
+  const commentSection = document.getElementById('comment-${key}');
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.setAttribute('multiple', true);
