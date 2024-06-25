@@ -478,7 +478,7 @@ function addCommentToDOM(key, comment) {
   commentSection.appendChild(uploadButton);
 
   // Display file links if exist
-  const filesRef = firebase.database().ref(files/${key});
+  const filesRef = firebase.database().ref('files/${key}');
   filesRef.once('value', snapshot => {
     const files = snapshot.val();
     if (files) {
