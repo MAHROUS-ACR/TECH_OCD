@@ -413,16 +413,18 @@ function addComment(key) {
     if (commentText.trim() === '') return;
 
     const timestamp = new Date().toLocaleString();
+    const database = firebase.database();
+    const commentsRef = database.ref(`comments/${key}`).push();
+    const commentKey = commentsRef.key; // الحصول على معرف التعليق الفريد
     const comment = {
         user: user.email,
         text: commentText,
         timestamp: timestamp,
-        MinOfPO_ID: key // إضافة MinOfPO_ID إلى التعليق
+        MinOfPO_ID: key, // إضافة MinOfPO_ID إلى التعليق
+        commentKey: commentKey // إضافة معرف التعليق الفريد إلى التعليق
     };
 
     // حفظ التعليق في Firebase
-    const database = firebase.database();
-    const commentsRef = database.ref(`comments/${key}`).push();
     commentsRef.set(comment);
 
     // إضافة التعليق إلى DOM
@@ -480,13 +482,13 @@ function addCommentToDOM(key, comment) {
     const uploadButton = document.createElement('button');
     uploadButton.textContent = 'رفع الملفات';
     uploadButton.onclick = function() {
-        uploadFiles(key, fileInput.files);
+        uploadFiles(comment.commentKey, fileInput.files);
     };
     commentDiv.appendChild(fileInput); // تم إضافة حقل الإدخال للملفات إلى commentDiv بدلاً من commentSection
     commentDiv.appendChild(uploadButton); // تم إضافة زر الرفع إلى commentDiv بدلاً من commentSection
 
     // عرض روابط الملفات إذا كانت موجودة
-    const filesRef = firebase.database().ref(`files/${key}`);
+    const filesRef = firebase.database().ref(`files/${comment.commentKey}`);
     filesRef.once('value', snapshot => {
         const files = snapshot.val();
         if (files) {
