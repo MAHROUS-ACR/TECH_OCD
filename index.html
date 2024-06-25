@@ -366,19 +366,15 @@ firebase.auth().onAuthStateChanged((user) => {
                             <td>${data[key].ETA}</td>
                         </tr>
                         <tr>
-                              <td colspan="10">
-                <div class="comment-section" id="comments-${item.MinOfPO_ID}">
-                    <!-- Comments will be dynamically added here -->
-                    <input type="text" id="comment-input-${item.MinOfPO_ID}" placeholder="Add a comment">
-                    <button onclick="addComment('${item.MinOfPO_ID}')">Add Comment</button>
-                    <input type="file" id="file-input-${item.MinOfPO_ID}" multiple>
-                    <button onclick="uploadFiles('${item.MinOfPO_ID}')">Upload Files</button>
-                </div>
-            </td>
-        </tr>`;
-    tableBody.innerHTML += row;
-    loadCommentsAndFiles(item.MinOfPO_ID);
-});
+                            <td colspan="10">
+                                <div class="comment-section" id="comments-${data[key].MinOfPO_ID}">
+                                    <!-- Comments will be dynamically added here -->
+                                    <input type="text" id="comment-input-${data[key].MinOfPO_ID}" placeholder="Add a comment">
+                                    <button onclick="addComment('${data[key].MinOfPO_ID}')">Add Comment</button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    tableBody.innerHTML += row;
 
                     // Load existing comments for this row
                     const commentsRef = firebase.database().ref(`/comments/${data[key].MinOfPO_ID}`);
@@ -407,7 +403,7 @@ firebase.auth().onAuthStateChanged((user) => {
             });
         }
 
-    
+       // Add comment
 function addComment(key) {
     const user = firebase.auth().currentUser;
     if (!user) return;
@@ -426,7 +422,7 @@ function addComment(key) {
 
     // حفظ التعليق في Firebase
     const database = firebase.database();
-    const commentsRef = database.ref(`comments/${key}`).push(); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const commentsRef = database.ref(`comments/${key}`).push();
     commentsRef.set(comment);
 
     // إضافة التعليق إلى DOM
@@ -437,61 +433,36 @@ function addComment(key) {
 }
 
 // دالة لرفع الملفات وحفظ روابط التحميل
-function uploadFiles(key) {
-    const fileInput = document.getElementById(`file-input-${key}`);
-    const files = fileInput.files;
+function uploadFiles(commentKey, files) {
     const storageRef = firebase.storage().ref();
-    const commentFilesRef = storageRef.child(`files/${key}`); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const commentFilesRef = storageRef.child(`comments/${commentKey}`); 
 
     Array.from(files).forEach(file => {
-        const fileRef = commentFilesRef.child(file.name);
+        const fileRef = commentFilesRef.child(file.name); // تصحيح استخدام اسم الملف بشكل صحيح هنا
         fileRef.put(file).then(snapshot => {
             console.log('تم رفع الملف:', snapshot.ref.fullPath);
             fileRef.getDownloadURL().then(downloadURL => {
-                saveFileURL(key, file.name, downloadURL);
-                // إضافة الرابط إلى DOM كتعليق
-                addFileToDOM(file.name, downloadURL, key);
+                saveFileURL(commentKey, file.name, downloadURL);
             });
         }).catch(error => {
             console.error('فشل في الرفع:', error);
         });
     });
-
-    // مسح حقل إدخال الملفات
-    fileInput.value = '';
 }
 
-function saveFileURL(key, fileName, downloadURL) {
+// دالة لحفظ رابط التحميل في قاعدة البيانات الحية في Firebase
+function saveFileURL(commentKey, fileName, downloadURL) {
     const database = firebase.database();
-    const filesRef = database.ref(`files/${key}`); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const filesRef = database.ref(`files/${commentKey}`);
     filesRef.push({
         fileName: fileName,
         downloadURL: downloadURL
     });
 }
 
-function addFileToDOM(fileName, downloadURL, key) {
-    const user = firebase.auth().currentUser;
-    if (!user) return;
-
-    const timestamp = new Date().toLocaleString();
-    const fileComment = {
-        user: user.email,
-        text: `<a href="${downloadURL}" target="_blank">${fileName}</a>`,
-        timestamp: timestamp,
-        MinOfPO_ID: key
-    };
-
-    // حفظ تعليق الملف في Firebase
-    const database = firebase.database();
-    const commentsRef = database.ref(`comments/${key}`).push();
-    commentsRef.set(fileComment);
-
-    // إضافة تعليق الملف إلى DOM
-    addCommentToDOM(key, fileComment);
-}
-
+// دالة لإضافة التعليق إلى DOM وإدارة رفع الملفات
 function addCommentToDOM(key, comment) {
+    // إضافة التعليقات كالمعتاد
     const commentSection = document.getElementById(`comments-${key}`);
     const commentDiv = document.createElement('div');
     commentDiv.classList.add('comment');
@@ -501,22 +472,37 @@ function addCommentToDOM(key, comment) {
         <p>${comment.timestamp}</p>
     `;
     commentSection.appendChild(commentDiv);
-}
 
-// تحميل التعليقات والملفات عند تحميل الصفحة
-function loadCommentsAndFiles(key) {
-    const commentsRef = firebase.database().ref(`/comments/${key}`);
-    commentsRef.once('value', (snapshot) => {
-        const commentsData = snapshot.val();
-        if (commentsData) {
-            Object.keys(commentsData).forEach(commentKey => {
-                addCommentToDOM(key, commentsData[commentKey]);
+    // إضافة حقل إدخال الملفات وزر الرفع
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.setAttribute('multiple', true);
+    const uploadButton = document.createElement('button');
+    uploadButton.textContent = 'رفع الملفات';
+    uploadButton.onclick = function() {
+        uploadFiles(key, fileInput.files);
+    };
+    commentDiv.appendChild(fileInput); // تم إضافة حقل الإدخال للملفات إلى commentDiv بدلاً من commentSection
+    commentDiv.appendChild(uploadButton); // تم إضافة زر الرفع إلى commentDiv بدلاً من commentSection
+
+    // عرض روابط الملفات إذا كانت موجودة
+    const filesRef = firebase.database().ref(`files/${key}`);
+    filesRef.once('value', snapshot => {
+        const files = snapshot.val();
+        if (files) {
+            Object.keys(files).forEach(fileKey => {
+                const file = files[fileKey];
+                const fileLink = document.createElement('a');
+                fileLink.href = file.downloadURL;
+                fileLink.textContent = file.fileName;
+                fileLink.target = '_blank';
+                commentDiv.appendChild(fileLink); // تم إضافة رابط الملف إلى commentDiv بدلاً من commentSection
+                commentDiv.appendChild(document.createElement('br'));
             });
         }
     });
 }
-
-   // Load chat messages
+        // Load chat messages
         function loadChatMessages() {
             const chatMessagesRef = firebase.database().ref('/chat');
             chatMessagesRef.on('value', (snapshot) => {
