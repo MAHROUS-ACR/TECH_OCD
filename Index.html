@@ -1,0 +1,496 @@
+l<!DOCTYPE html>
+<html lang="en">
+<head>
+ <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2MTRQT4H5M"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=.25, minimum-scale=0.25">
+    <title>ACR</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 100%;
+            direction: rtl;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: auto;
+background-color:#fff;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        @keyframes blink {
+            0% { color: #3498db; font-weight: bold; } /* اللون الأزرق ونص بولد */
+            50% { color: #e74c3c; font-weight: normal; } /* اللون الأحمر ونص عادي */
+            100% { color: #3498db; font-weight: bold; } /* العودة إلى اللون الأزرق ونص بولد */
+        }
+        #nDvalueDisplay {
+            animation: blink 2s infinite; /* تكرار التأثير كل ثانيتين وبشكل متكرر */
+            color: #3498db; /* اللون الأزرق الافتراضي للنص */
+            font-weight: bold; /* نص بولد الافتراضي */
+            text-align: center; /* محاذاة النص في الوسط */
+            margin-top: 20px; /* تباعد أعلى */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            direction: rtl;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        td.remaining {
+            background-color: #ffffcc; /* اللون الأصفر */
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: right;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        #login-form, #logout-button, #filters {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+#login-form{
+background-color: #fff;
+}
+        #login-form input {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+background-color:#fff;
+        }
+        #login-form button, #logout-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #login-form button:hover, #logout-button:hover {
+            background-color: #45a049;
+        }
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .comment-section {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
+        .comment {
+            margin-bottom: 10px;
+        }
+        .comment strong {
+            display: block;
+        }
+        #chat-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            padding: 10px;
+        }
+        #chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        #chat-input {
+            width: calc(100% - 90px);
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #chat-send {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .group-title {
+            background-color:#3498db; /* اللون الأزرق */
+            color: white;
+            padding: 10px;
+            margin: 0;
+            text-align: center;
+        }
+    </style>
+    
+</script>
+</head>
+
+
+  
+<body>
+    <div class="container">
+        <h1>PO.ACR</h1>
+        <div id="login-form">
+            <img src="https://lh3.googleusercontent.com/fife/ALs6j_HgcVIF_VXWaKfy30HaLwWEl1cbKt7gr4ZNLMMMblb2WoVknjO2K_LNyf5HDWC8EbOBcK5WRyhwMd99tTlKs3WGpymBfJz1IyZgekw0Z4oxhFV__NooqF_dC1jM_slbhuaypRM7SJLTBpr7QwZs5XXClFg5fKUvOCEBXG6CTwW_vHPZ1oB1cvAu2uCaIorygqqXCoNG5OC3J5SG0-NXJrtc0LqvLIag-RHyf6_jKj9krK3UB8zKNaKL44AmKeo5E3RPMW0Z740diz5pCK9g62TiHcbkmcsFRUouQzmFvkUnGf40o5k0SpCw1PM3Lt8D-_pKhVKkuQwxcjlUlJp-C6yXGn9QgGffsKqnwHVp4jdeayiSJDdWYLmTja9QYourGVCncTM3Sqg6Xgw_Ep36MrxaXEExIeakL90ELX8LlqWfbOGRpQw5NTiUzjpp7GxWAYlecF9PlBMVsgomKMQu7Ycg2UEki85uqjLG6DW6KGjHBSnhMqB7DnttbBx4hFA_FQqIvu02omQ-WTZaxwGNSFXw_VbwVmIXxuXRc7IXgwaGxZSkHGq6rnZbYa06XrZOXT0CiBRPqRqGt3tOER42DXGR7lIYnLaUcrFaYm9AaHj1o3hipF5O4LZli--Ozv8z8i_GFv9d7TJAuZxgLit3lcZg3eF2JNEcad7w6NFhR0j7vB828F6_2MrocJpSieICu_B_AQGwQwrgaacFtnUjgV1-bwvJpB58WULUuuswgKvDF1mD--dPA0BQ2KrsLlNubGxCc0FrANRcEFjvsg896ehF9KYeDxueZ3WDp-yfEs0lbm88LZZqXwWoLO_nrTZ9EQdI9XoVjWhlQFAyIcK_I3okMr8q0EkUnj5lhQWI6kSz_n-2o7vjLnwwE6nMXB6hwJ_VBAwUbF0OJLpjvMHpe9_Z4cfQOb4iZdRTQI67ugHGCPNoVCCg8y43rnoRBHPYjL644RdIfGVS_U9vQ1zabsb1GRGLBp3xQURz7PKm1y5KCzcs4OBOwBfb2Mg-8F8UqcIJ5zV0K4_xaH_TTGiLqwsJZpUJsszzMCMNnPb4vvuRksKGnDDX9folEVKrFl9ilZLAAJvmrSFE4z9rP-XVorYDBIOSUPJ4qXFfFKfxNgAlheBjs_LIlZqAknOP_xMpQyKivD-Od86A7lLjMbBfVCvVH9hTyItf_Ao8iDXG4YsGNqGaaPwHtCxynJsrE656WWe-FDAudWbq21mNZi7WrRftRKDLZwFAuSN3YeFMizC1rTT9O6qAlnSVA0HkrTgLXv0dpBqJ6RY9hNzMniZEc-LGm_xcBCncMuLtW2Rsh_pcCxS3qdNXC7fN0y89DvRx36-ZDHcc_GPgQbl8oyd9lUE_Mx-rhHVCq9Hdz_UFqmk-3I1G1fhraYYFnt3hhLZoG1DGCEz6LpHLvJqkcAXBF7JuY6hJybAmQ7F5gluv_fpDzGjaNGo_uVUdaUlh2y4YKrcZDP0zIvmqK4EXikM-pAfbl8GPY5-nWAUCigFCRKgK_lpvM5g1R5cJzv99hJ0cuQzw7XRZgkFfTT_aMqE7inUR7hQCuxorIMMhk--u8TfVMCD10TbPTeyAAgXHf-OMlDvJWGCVUUtYQfjei5ZcXPVx6NaeKJ3ihkNEEsw5usrIKivLTWqsTDVK=w527-h393-p-k-nu" alt="Logo" class="logo">
+            <form onsubmit="event.preventDefault(); login();">
+                <h2>Login</h2>
+                <input type="email" id="email" placeholder="Email" required><br><br>
+                <input type="password" id="password" placeholder="Password" required><br><br>
+                <button type="submit">Login</button>
+                <p id="login-error" style="color:red;"></p>
+            </form>
+        </div>
+        
+        <button id="logout-button" onclick="logout()" style="display:none;">Logout</button>
+        <div id = "nDvalueDisplay"></div>
+<div id="user-email" style="display:none; text-align: center; margin-bottom: 20px;"></div>
+        <div id="filters" style="display:none;">
+            <label for="departmentFilter">تصفية بالقسم:</label>
+            <select id="departmentFilter" onchange="applyFilters()">
+                <option value="">الكل</option>
+            </select>
+            <label for="clientFilter">تصفية باسم العميل:</label>
+            <select id="clientFilter" onchange="applyFilters()">
+                <option value="">الكل</option>
+            </select>
+        </div>
+        <table id="data" style="display:none;">
+            <thead>
+                <tr>
+                    
+                    <th>أمر التوريد</th>
+                    <th>الصنف</th>
+                    <th>الوصف</th>
+                    <th>الوحدة</th>
+                    <th>المطلوب</th>
+                    <th>المسلم</th>
+                    <th>المتبقى</th>
+                    <th>ETA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rows will be dynamically added here -->
+            </tbody>
+        </table>
+        <div id="chat-container" style="display:none;">
+            <h2>Chat</h2>
+            <div id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs and Configuration -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script>
+       window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2MTRQT4H5M');
+
+        // Firebase Configuration
+        const firebaseConfig = {
+             apiKey: "AIzaSyACFHbMr19jQI8t39FvABCSuMpSz6TR5hY",
+  authDomain: "tch-o-5e243.firebaseapp.com",
+  databaseURL: "https://tch-o-5e243-default-rtdb.firebaseio.com",
+  projectId: "tch-o-5e243",
+  storageBucket: "tch-o-5e243.appspot.com",
+  messagingSenderId: "356977983925",
+  appId: "1:356977983925:web:0e8669180f9d664a49d9fc",
+  measurementId: "G-9X82V7SXPX"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Authentication
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('data').style.display = 'table';
+        document.getElementById('logout-button').style.display = 'block';
+        document.getElementById('filters').style.display = 'block';
+        document.getElementById('chat-container').style.display = 'block';
+        document.getElementById('user-email').style.display = 'block';
+        document.getElementById('user-email').innerText = `Logged in as: ${user.email}`;
+        fetchData();
+        loadChatMessages();
+    } else {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('data').style.display = 'none';
+        document.getElementById('logout-button').style.display = 'none';
+        document.getElementById('filters').style.display = 'none';
+        document.getElementById('chat-container').style.display = 'none';
+        document.getElementById('user-email').style.display = 'none';
+    }
+});
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .catch((error) => {
+                    document.getElementById('login-error').innerText = error.message;
+                });
+        }
+
+        function logout() {
+            firebase.auth().signOut()
+                .then(() => {
+                    document.getElementById('login-form').style.display = 'block';
+                    document.getElementById('data').style.display = 'none';
+                    document.getElementById('logout-button').style.display = 'none';
+                    document.getElementById('filters').style.display = 'none';
+                    document.getElementById('chat-container').style.display = 'none';
+                }).catch((error) => {
+                    console.error("Error signing out:", error);
+                });
+        }
+
+        // Fetch data from Firebase
+        function fetchData() {
+            const database = firebase.database();
+            const dbRef = database.ref('/data');
+           
+            dbRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                populateFilters(data); // Populate the filters with unique values
+                displayData(data); // Display the data
+            }, (error) => {
+                console.error("Error: " + error.code);
+                alert("Error: " + error.code); // Show error message to user
+            });
+            const Nref = database.ref('N/NF');
+            Nref.on('value', (snapshot) => {
+                const nDvalue = snapshot.val();
+                document.getElementById('nDvalueDisplay').textContent= nDvalue;
+            });
+        }
+            
+            
+        // Populate filters with unique values
+        function populateFilters(data) {
+            const departments = new Set();
+            const clients = new Set();
+
+            Object.keys(data).forEach((key) => {
+                departments.add(data[key].القسم);
+                clients.add(data[key].العميل);
+            });
+
+            const departmentFilter = document.getElementById('departmentFilter');
+            const clientFilter = document.getElementById('clientFilter');
+
+            departmentFilter.innerHTML = '<option value="">الكل</option>'; // Reset options
+            departments.forEach((dept) => {
+                const option = document.createElement('option');
+                option.value = dept;
+                option.text = dept;
+                departmentFilter.appendChild(option);
+            });
+
+            clientFilter.innerHTML = '<option value="">الكل</option>'; // Reset options
+            clients.forEach((client) => {
+                const option = document.createElement('option');
+                option.value = client;
+                option.text = client;
+                clientFilter.appendChild(option);
+            });
+        }
+
+        // Display data based on filters
+        function displayData(data) {
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const clientFilter = document.getElementById('clientFilter').value;
+            const tableBody = document.querySelector('#data tbody');
+            tableBody.innerHTML = ''; // Clear previous data
+
+            let groupKey = '';
+
+            Object.keys(data).forEach((key, index) => {
+                if ((departmentFilter === '' || data[key].القسم === departmentFilter) &&
+                    (clientFilter === '' || data[key].العميل === clientFilter)) {
+
+                    if (groupKey !== data[key].الطلب) {
+                        groupKey = data[key].الطلب;
+                        const groupRow = `
+                            <tr>
+                                <td colspan="30" style="background-color: #3498db; text-align: center;">
+                                    <strong>${groupKey},${data[key].العميل}
+                                </td>
+                             
+                            </tr>`;
+                        tableBody.innerHTML += groupRow;
+                    }
+
+                    const row = `
+                        <tr>
+                           
+                            <td>${data[key].التوريد}</td>
+                            <td>${data[key].الصنف}</td>
+                            <td>${data[key].Discreption}</td>
+                            <td>${data[key].Unit}</td>
+                            <td>${data[key].المطلوب}</td>
+                            <td>${data[key].المسلم}</td>
+                            <td class="remaining">${data[key].المتبقى}</td>
+                            <td>${data[key].ETA}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="10">
+                                <div class="comment-section" id="comments-${data[key].MinOfPO_ID}">
+                                    <!-- Comments will be dynamically added here -->
+                                    <input type="text" id="comment-input-${data[key].MinOfPO_ID}" placeholder="Add a comment">
+                                    <button onclick="addComment('${data[key].MinOfPO_ID}')">Add Comment</button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    tableBody.innerHTML += row;
+
+                    // Load existing comments for this row
+                    const commentsRef = firebase.database().ref(`/comments/${data[key].MinOfPO_ID}`);
+                    commentsRef.once('value', (snapshot) => {
+                        const commentsData = snapshot.val();
+                        if (commentsData) {
+                            Object.keys(commentsData).forEach(commentKey => {
+                                addCommentToDOM(data[key].MinOfPO_ID, commentsData[commentKey]);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // Apply filters and display data
+        function applyFilters() {
+            const database = firebase.database();
+            const dbRef = database.ref('/data');
+            dbRef.once('value', (snapshot) => {
+                const data = snapshot.val();
+                displayData(data);
+            }, (error) => {
+                console.error("Error: " + error.code);
+                alert("Error: " + error.code); // Show error message to user
+            });
+        }
+
+        // Add comment
+        function addComment(key) {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const commentInput = document.getElementById(`comment-input-${key}`);
+            const commentText = commentInput.value;
+            if (commentText.trim() === '') return;
+
+            const timestamp = new Date().toLocaleString();
+            const comment = {
+                user: user.email,
+                text: commentText,
+                timestamp: timestamp,
+                MinOfPO_ID: key // Adding MinOfPO_ID to the comment
+            };
+
+            // Save comment to Firebase
+            const database = firebase.database();
+            const commentsRef = database.ref(`/comments/${key}`).push();
+            commentsRef.set(comment);
+
+            // Add comment to DOM
+            addCommentToDOM(key, comment);
+
+            // Clear input field
+            commentInput.value = '';
+        }
+
+        // Add comment to DOM
+        function addCommentToDOM(key, comment) {
+            const commentSection = document.getElementById(`comments-${key}`);
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment';
+            commentDiv.innerHTML = `<strong>${comment.user} (${comment.timestamp}):</strong> ${comment.text}`;
+            commentSection.insertBefore(commentDiv, commentSection.firstChild);
+        }
+
+        // Load chat messages
+        function loadChatMessages() {
+            const chatMessagesRef = firebase.database().ref('/chat');
+            chatMessagesRef.on('value', (snapshot) => {
+                const messages = snapshot.val();
+                const chatMessages = document.getElementById('chat-messages');
+                chatMessages.innerHTML = ''; // Clear previous messages
+
+                if (messages) {
+                    Object.keys(messages).forEach((key) => {
+                        const message = messages[key];
+                        addChatMessageToDOM(message);
+                    });
+                }
+            });
+        }
+
+        // Send chat message
+        function sendMessage() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const chatInput = document.getElementById('chat-input');
+            const messageText = chatInput.value;
+            if (messageText.trim() === '') return;
+
+            const timestamp = new Date().toLocaleString();
+            const message = {
+                user: user.email,
+                text: messageText,
+                timestamp: timestamp
+            };
+
+            // Save message to Firebase
+            const database = firebase.database();
+            const chatRef = database.ref('/chat').push();
+            chatRef.set(message);
+
+            // Clear input field
+            chatInput.value = '';
+        }
+
+        // Add chat message to DOM
+        function addChatMessageToDOM(message) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = `<strong>${message.user} (${message.timestamp}):</strong> ${message.text}`;
+            chatMessages.appendChild(messageDiv);
+            // Scroll to bottom of chat messages
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+
+    </script>
+</body>
+</html>
