@@ -486,7 +486,7 @@ function addCommentToDOM(key, comment) {
     commentSection.appendChild(uploadButton);
 
     // عرض روابط الملفات إذا كانت موجودة
-    const filesRef = firebase.database().ref(files/${key}); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const filesRef = firebase.database().ref('files/${key}'); // استخدام التعبيرات المتكاملة للسلاسل النصية
     filesRef.once('value', snapshot => {
         const files = snapshot.val();
         if (files) {
