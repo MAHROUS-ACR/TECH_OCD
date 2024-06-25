@@ -205,9 +205,11 @@ background-color:#fff;
 
     <!-- Firebase SDKs and Configuration -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+ 
     <script>
        window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -229,6 +231,7 @@ background-color:#fff;
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+     const storge = firebase.storge();
 
         // Authentication
 firebase.auth().onAuthStateChanged((user) => {
@@ -428,16 +431,66 @@ firebase.auth().onAuthStateChanged((user) => {
             // Clear input field
             commentInput.value = '';
         }
+     // upload file 
+        function uploadFiles(commentKey, files) {
+  const storageRef = storage.ref();
+  const commentFilesRef = storageRef.child(comments/${commentKey});
 
+  Array.from(files).forEach(file => {
+    const fileRef = commentFilesRef.child(file.name);
+    fileRef.put(file).then(snapshot => {
+      console.log('Uploaded a file:', snapshot.ref.fullPath);
+      fileRef.getDownloadURL().then(downloadURL => {
+        saveFileURL(commentKey, file.name, downloadURL);
+      });
+    }).catch(error => {
+      console.error('Upload failed:', error);
+    });
+  });
+}
+
+function saveFileURL(commentKey, fileName, downloadURL) {
+  // Save the download URL to Firestore or Realtime Database
+  const database = firebase.database();
+  const filesRef = database.ref(files/${commentKey});
+  filesRef.push({
+    fileName: fileName,
+    downloadURL: downloadURL
+  });
+}
         // Add comment to DOM
-        function addCommentToDOM(key, comment) {
-            const commentSection = document.getElementById(`comments-${key}`);
-            const commentDiv = document.createElement('div');
-            commentDiv.className = 'comment';
-            commentDiv.innerHTML = `<strong>${comment.user} (${comment.timestamp}):</strong> ${comment.text}`;
-            commentSection.insertBefore(commentDiv, commentSection.firstChild);
-        }
+       function addCommentToDOM(key, comment) {
+  // إضافة التعليقات كما هو في النمط.
+  // ...
+  // إضافة زر لتحميل الملفات
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.setAttribute('multiple', true);
+  const uploadButton = document.createElement('button');
+  uploadButton.textContent = 'Upload Files';
+  uploadButton.onclick = function() {
+    uploadFiles(key, fileInput.files);
+  };
+  commentSection.appendChild(fileInput);
+  commentSection.appendChild(uploadButton);
 
+  // عرض روابط الملفات إذا كانت موجودة
+  const filesRef = firebase.database().ref(files/${key});
+  filesRef.once('value', snapshot => {
+    const files = snapshot.val();
+    if (files) {
+      Object.keys(files).forEach(fileKey => {
+        const file = files[fileKey];
+        const fileLink = document.createElement('a');
+        fileLink.href = file.downloadURL;
+        fileLink.textContent = file.fileName;
+        fileLink.target = '_blank';
+        commentSection.appendChild(fileLink);
+        commentSection.appendChild(document.createElement('br'));
+      });
+    }
+  });
+}
         // Load chat messages
         function loadChatMessages() {
             const chatMessagesRef = firebase.database().ref('/chat');
