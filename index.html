@@ -462,8 +462,9 @@ function saveFileURL(commentKey, fileName, downloadURL) {
 
 // دالة لإضافة التعليق إلى DOM وإدارة رفع الملفات
 function addCommentToDOM(key, comment) {
-    // إضافة التعليقات كالمعتاد
-    const commentSection = document.getElementById(`comments-${key}`);
+    const commentSection = document.getElementById('comments-${key}');
+
+    // إنشاء عنصر التعليق
     const commentDiv = document.createElement('div');
     commentDiv.classList.add('comment');
     commentDiv.innerHTML = `
@@ -473,7 +474,7 @@ function addCommentToDOM(key, comment) {
     `;
     commentSection.appendChild(commentDiv);
 
-    // إضافة حقل إدخال الملفات وزر الرفع
+    // إنشاء حقل إدخال الملفات وزر رفع الملفات
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.setAttribute('multiple', true);
@@ -482,11 +483,13 @@ function addCommentToDOM(key, comment) {
     uploadButton.onclick = function() {
         uploadFiles(key, fileInput.files);
     };
-    commentSection.appendChild(fileInput);
-    commentSection.appendChild(uploadButton);
+
+    // إضافة عنصر التحميل إلى نفس عنصر التعليق
+    commentDiv.appendChild(fileInput);
+    commentDiv.appendChild(uploadButton);
 
     // عرض روابط الملفات إذا كانت موجودة
-    const filesRef = firebase.database().ref(`files/${key}`); // استخدام التعبيرات المتكاملة للسلاسل النصية
+    const filesRef = firebase.database().ref('files/${key}');
     filesRef.once('value', snapshot => {
         const files = snapshot.val();
         if (files) {
@@ -496,8 +499,8 @@ function addCommentToDOM(key, comment) {
                 fileLink.href = file.downloadURL;
                 fileLink.textContent = file.fileName;
                 fileLink.target = '_blank';
-                commentSection.appendChild(fileLink);
-                commentSection.appendChild(document.createElement('br'));
+                commentDiv.appendChild(fileLink);
+                commentDiv.appendChild(document.createElement('br'));
             });
         }
     });
