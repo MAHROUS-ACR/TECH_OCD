@@ -445,9 +445,13 @@ function uploadFiles(commentKey, files) {
             console.log('تم رفع الملف:', snapshot.ref.fullPath);
             fileRef.getDownloadURL().then(downloadURL => {
                 saveFileURL(commentKey, file.name, downloadURL);
+
+                // عرض رسالة تأكيد بعد رفع الملف
+                alert(`تم رفع الملف بنجاح: ${file.name}`);
             });
         }).catch(error => {
             console.error('فشل في الرفع:', error);
+            alert(`فشل في رفع الملف: ${file.name}`);
         });
     });
 }
