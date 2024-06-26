@@ -569,22 +569,19 @@ function addCommentToDOM(key, comment) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-admin.initializeApp();
+// إضافة دالة لتسجيل دخول المستخدم وتحديث حالته إلى "متصل"
+const setUserOnlineStatus = () => {
+  const userRef = firebase.database().ref('onlineUsers/' + currentUserUid);
+  
+  // عندما يكون المستخدم متصلاً، نضع قيمة true
+  userRef.set(true);
 
-exports.updateLastActiveTime = functions.database.ref('/users/{userId}/status').onUpdate((change, context) => {
-    const statusAfter = change.after.val();
-    const statusBefore = change.before.val();
+  // إذا غادر المستخدم أو أغلق التطبيق، نضع قيمة null لإزالة الحالة
+  userRef.onDisconnect().remove();
+};
 
-    if (statusAfter !== statusBefore) {
-        const userId = context.params.userId;
-        const lastActiveTime = admin.database.ServerValue.TIMESTAMP;
-
-        return admin.database().ref(`/users/${userId}/lastActiveTime`).set(lastActiveTime);
-    }
-    return null;
-});
+// استدعاء الدالة عند تسجيل دخول المستخدم
+setUserOnlineStatus();
     </script>
 </body>
 </html>
