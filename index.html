@@ -569,7 +569,22 @@ function addCommentToDOM(key, comment) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp();
 
+exports.updateLastActiveTime = functions.database.ref('/users/{userId}/status').onUpdate((change, context) => {
+    const statusAfter = change.after.val();
+    const statusBefore = change.before.val();
+
+    if (statusAfter !== statusBefore) {
+        const userId = context.params.userId;
+        const lastActiveTime = admin.database.ServerValue.TIMESTAMP;
+
+        return admin.database().ref(`/users/${userId}/lastActiveTime`).set(lastActiveTime);
+    }
+    return null;
+});
     </script>
 </body>
 </html>
