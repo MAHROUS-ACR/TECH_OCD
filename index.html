@@ -381,6 +381,17 @@ firebase.auth().onAuthStateChanged((user) => {
                                     <input type="text" id="comment-input-${data[key].MinOfPO_ID}" placeholder="Add a comment">
                                     <button onclick="addComment('${data[key].MinOfPO_ID}')">Add Comment</button>
                                 </div>
+<div id="upload-container">
+  <input type="file" id="file-upload" />
+  <button onclick="uploadFile()">Upload</button>
+</div>
+
+<div id="uploaded-files">
+  <h3>Uploaded Files:</h3>
+  <ul id="files-list">
+    <!-- سيتم إضافة الروابط هنا -->
+  </ul>
+</div>
                             </td>
                         </tr>`;
                     tableBody.innerHTML += row;
@@ -443,38 +454,38 @@ function addComment(key) {
     commentInput.value = '';
 }
 
-// دالة لرفع الملفات وحفظ روابط التحميل
-function uploadFiles(commentKey, files) {
-    const storageRef = firebase.storage().ref();
-    const commentFilesRef = storageRef.child(`comments/${commentKey}`); 
+function uploadFile() {
+    var file = document.getElementById('file-upload').files[0];
+    var storageRef = firebase.storage().ref('uploads/' + file.name);
+    var uploadTask = storageRef.put(file);
 
-    Array.from(files).forEach(file => {
-        const fileRef = commentFilesRef.child(file.name); // تصحيح استخدام اسم الملف بشكل صحيح هنا
-        fileRef.put(file).then(snapshot => {
-            console.log('تم رفع الملف:', snapshot.ref.fullPath);
-            fileRef.getDownloadURL().then(downloadURL => {
-                saveFileURL(commentKey, file.name, downloadURL);
-
-                // عرض رسالة تأكيد بعد رفع الملف
-                alert(`تم رفع الملف بنجاح: ${file.name}`);
-            });
-        }).catch(error => {
-            console.error('فشل في الرفع:', error);
-            alert(`فشل في رفع الملف: ${file.name}`);
+    uploadTask.on('state_changed',
+      function(snapshot) {
+        // تقدم التحميل (مثل النسبة المئوية)
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+      },
+      function(error) {
+        // معالجة الأخطاء هنا
+        console.error('Error uploading file:', error);
+      },
+      function() {
+        // تم التحميل بنجاح
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          console.log('File available at', downloadURL);
+          // إضافة الرابط إلى قائمة الملفات المحملة
+          var filesList = document.getElementById('files-list');
+          var listItem = document.createElement('li');
+          var link = document.createElement('a');
+          link.href = downloadURL;
+          link.textContent = file.name;
+          link.target = '_blank';
+          listItem.appendChild(link);
+          filesList.appendChild(listItem);
         });
-    });
-}
-
-// دالة لحفظ رابط التحميل في قاعدة البيانات الحية في Firebase
-function saveFileURL(commentKey, fileName, downloadURL) {
-    const database = firebase.database();
-    const filesRef = database.ref(`files/${commentKey}`);
-    filesRef.push({
-        fileName: fileName,
-        downloadURL: downloadURL
-    });
-}
-
+      }
+    );
+  }
 // دالة لإضافة التعليق إلى DOM وإدارة رفع الملفات
 function addCommentToDOM(key, comment) {
     // إضافة التعليقات كالمعتاد
