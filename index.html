@@ -636,6 +636,7 @@ function uploadFile(minOfPO_ID) {
 
                     // إزالة شريط التقدم بعد النجاح
                     document.getElementById(`upload-container-${minOfPO_ID}`).removeChild(progressBar);
+fileInput.value = '';
                 });
             }
         );
