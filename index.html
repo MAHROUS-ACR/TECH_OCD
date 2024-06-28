@@ -191,6 +191,22 @@ background-color:#fff;
             margin: 0;
             text-align: center;
         }
+.progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 13px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            width: 0%;
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            border-radius: 13px;
+        }
     </style>
 
 </script>
@@ -564,38 +580,66 @@ firebase.auth().onAuthStateChanged((user) => {
 
 // Upload file associated with a specific row
 function uploadFile(minOfPO_ID) {
-    var user = firebase.auth().currentUser;
-    if (!user) {
-        alert('You must be logged in to upload files.');
-        return;
-    }
-
-    var file = document.getElementById(`file-upload-${minOfPO_ID}`).files[0];
-    if (!file) {
-        alert('Please choose a file to upload.');
-        return;
-    }
-
-    var storageRef = firebase.storage().ref(`uploads/${file.name}`);
-    var uploadTask = storageRef.put(file);
-
-    uploadTask.on('state_changed',
-        function(snapshot) {
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-        },
-        function(error) {
-            console.error('Error uploading file:', error);
-        },
-        function() {
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL);
-                saveFileLink(minOfPO_ID, file.name, downloadURL); // حفظ الرابط في قاعدة البيانات مع ربطه بالصف
-showUploadConfirmation(file.name, downloadURL); // Show upload confirmation message and add file to list
-            });
+        const fileInput = document.getElementById(`file-upload-${minOfPO_ID}`);
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please select a file to upload.');
+            return;
         }
-    );
-}
+
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(`uploads/${minOfPO_ID}/${file.name}`);
+        const uploadTask = fileRef.put(file);
+
+        // إنشاء عنصر شريط التقدم
+        const progressBar = document.createElement('progress');
+        progressBar.id = `progress-bar-${minOfPO_ID}`;
+        progressBar.value = 0;
+        progressBar.max = 100;
+        document.getElementById(`upload-container-${minOfPO_ID}`).appendChild(progressBar);
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                // تحديث شريط التقدم
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                progressBar.value = progress;
+            },
+            (error) => {
+                console.error('Upload failed:', error);
+                alert('Failed to upload file. Please try again.');
+                // إزالة شريط التقدم في حالة الفشل
+                document.getElementById(`upload-container-${minOfPO_ID}`).removeChild(progressBar);
+            },
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                    console.log('File available at', downloadURL);
+
+                    // حفظ رابط الملف في قاعدة البيانات
+                    const database = firebase.database();
+                    const filesRef = database.ref(`/files/${minOfPO_ID}`).push();
+                    filesRef.set({
+                        name: file.name,
+                        url: downloadURL,
+                        uploadedBy: firebase.auth().currentUser.email,
+                        timestamp: new Date().toLocaleString()
+                    });
+
+                    // إضافة رابط الملف إلى DOM
+                    const filesList = document.getElementById(`files-list-${minOfPO_ID}`);
+                    const fileLink = document.createElement('a');
+                    fileLink.href = downloadURL;
+                    fileLink.target = '_blank';
+                    fileLink.innerText = file.name;
+                    const listItem = document.createElement('li');
+                    listItem.appendChild(fileLink);
+                    filesList.appendChild(listItem);
+
+                    // إزالة شريط التقدم بعد النجاح
+                    document.getElementById(`upload-container-${minOfPO_ID}`).removeChild(progressBar);
+                });
+            }
+        );
+    }
 
 // Save file link associated with a specific row
 function saveFileLink(minOfPO_ID, fileName, downloadURL) {
