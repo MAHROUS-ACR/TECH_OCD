@@ -10,3 +10,4 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseconfig);
 const messaging = firebase.messaging();
+messaging.usepublicVapidkey("BDv3UJ5f8FRPQkVbfX4T1PgnFtVw7dhQCzcMkLigWvCcKqVd6FweEwVQJYOHGKm87tof8LbaEe23kauAwBmYEFA");
