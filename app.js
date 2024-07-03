@@ -1,17 +1,39 @@
 
 
 
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const database = firebase.database();
+
+// Register new user
+document.getElementById('register').addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log('User registered: ', user);
+            document.getElementById('user-info').innerText = Hello, ${user.email};
+
             // Record user activity
             const userRef = database.ref('user_activities/' + user.uid);
             userRef.set({
                 last_active: firebase.database.ServerValue.TIMESTAMP,
                 email: user.email
+            }).then(() => {
+                console.log('User activity recorded successfully.');
+            }).catch((error) => {
+                console.error('Error recording user activity: ', error);
             });
 
             startTrackingActivity(user.uid);
-      
-        
-
+        })
+        .catch((error) => {
+            console.error('Error registering user: ', error);
+        });
+});
 
 // Login existing user
 document.getElementById('login').addEventListener('click', () => {
@@ -22,13 +44,17 @@ document.getElementById('login').addEventListener('click', () => {
         .then((userCredential) => {
             const user = userCredential.user;
             console.log('User logged in: ', user);
-            document.getElementById('user-info').innerText = `Hello, ${user.email}`;
+            document.getElementById('user-info').innerText = Hello, ${user.email};
 
             // Record user activity
             const userRef = database.ref('user_activities/' + user.uid);
             userRef.set({
                 last_active: firebase.database.ServerValue.TIMESTAMP,
                 email: user.email
+            }).then(() => {
+                console.log('User activity recorded successfully.');
+            }).catch((error) => {
+                console.error('Error recording user activity: ', error);
             });
 
             startTrackingActivity(user.uid);
@@ -45,6 +71,10 @@ function startTrackingActivity(uid) {
             const userRef = database.ref('user_activities/' + uid);
             userRef.update({
                 last_active: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                console.log('User activity updated successfully.');
+            }).catch((error) => {
+                console.error('Error updating user activity: ', error);
             });
         });
     });
