@@ -1,4 +1,4 @@
-l<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
  <!-- Google tag (gtag.js) -->
@@ -7,7 +7,7 @@ l<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=.25, minimum-scale=0.25">
     <title>ACR</title>
     <style>
-
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -61,7 +61,7 @@ background-color:#fff;
             background-color: #f2f2f2;
          padding: 10px;
             border-bottom: 1px solid #ddd;
-            text-align: right;
+            text-align: center;
             border: 1px solid black;
             font-size: 30px;
         }
@@ -132,7 +132,7 @@ background-color:#fff;
         }
         .comment-section input[type="text"] {
     font-size: 20px; /* حجم الخط لحقل التعليق */
-    width: calc(100% - 120px); /* لضبط العرض بما يناسب الزر */
+    width: calc(80% - 100px); /* لضبط العرض بما يناسب الزر */
     padding: 10px;
     margin-top: 10px;
     border: 1px solid #ccc;
@@ -208,12 +208,12 @@ background-color:#fff;
             border-radius: 13px;
         }
     </style>
-
+    
 </script>
 </head>
 
 
-
+  
 <body>
     <div class="container">
         <h1>PO.ACR</h1>
@@ -227,7 +227,7 @@ background-color:#fff;
                 <p id="login-error" style="color:red;"></p>
             </form>
         </div>
-       <div id = "message"style="display:non;color:green;"></div>
+        
         <button id="logout-button" onclick="logout()" style="display:none;">Logout</button>
         <div id = "nDvalueDisplay"></div>
 <div id="user-email" style="display:none; text-align: center; margin-bottom: 20px;font-size: 20px;"></div>
@@ -244,7 +244,7 @@ background-color:#fff;
         <table id="data" style="display:none;">
             <thead>
                 <tr>
-
+                    
                     <th>أمر التوريد</th>
                     <th>الصنف</th>
                     <th>الوصف</th>
@@ -272,9 +272,7 @@ background-color:#fff;
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
- <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging-sw.js"></script>
-         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-config.js"></script>
- <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-main.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
     <script>
        window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -284,15 +282,15 @@ background-color:#fff;
 
         // Firebase Configuration
         const firebaseConfig = {
-              apiKey: "AIzaSyACFHbMr19jQI8t39FvABCSuMpSz6TR5hY",
-  authDomain: "tch-o-5e243.firebaseapp.com",
-  databaseURL: "https://tch-o-5e243-default-rtdb.firebaseio.com",
-  projectId: "tch-o-5e243",
-  storageBucket: "tch-o-5e243.appspot.com",
-  messagingSenderId: "356977983925",
-  appId: "1:356977983925:web:0e8669180f9d664a49d9fc",
-  measurementId: "G-9X82V7SXPX"
-};
+            apiKey: "AIzaSyCz-ydE1F9Gfm8_d6exEfq2hdSuZmQRSd4",
+            authDomain: "bckacr-49e4c.firebaseapp.com",
+            databaseURL: "https://bckacr-49e4c-default-rtdb.firebaseio.com",
+            projectId: "bckacr-49e4c",
+            storageBucket: "bckacr-49e4c.appspot.com",
+            messagingSenderId: "646102338822",
+            appId: "1:646102338822:web:a6de8a05e59aff3c736287",
+            measurementId: "G-2MTRQT4H5M"
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -309,7 +307,7 @@ firebase.auth().onAuthStateChanged((user) => {
         document.getElementById('user-email').innerText = `Logged in as: ${user.email}`;
         fetchData();
         loadChatMessages();
-
+     
     } else {
         document.getElementById('login-form').style.display = 'block';
         document.getElementById('data').style.display = 'none';
@@ -317,7 +315,7 @@ firebase.auth().onAuthStateChanged((user) => {
         document.getElementById('filters').style.display = 'none';
         document.getElementById('chat-container').style.display = 'none';
         document.getElementById('user-email').style.display = 'none';
-
+      
     }
 });
 
@@ -347,7 +345,7 @@ firebase.auth().onAuthStateChanged((user) => {
         function fetchData() {
             const database = firebase.database();
             const dbRef = database.ref('/data');
-
+           
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 populateFilters(data); // Populate the filters with unique values
@@ -362,8 +360,8 @@ firebase.auth().onAuthStateChanged((user) => {
                 document.getElementById('nDvalueDisplay').textContent= nDvalue;
             });
         }
-
-
+            
+            
         // Populate filters with unique values
         function populateFilters(data) {
             const departments = new Set();
@@ -383,7 +381,7 @@ firebase.auth().onAuthStateChanged((user) => {
                 option.value = dept;
                 option.text = dept;
                 departmentFilter.appendChild(option);
-
+             
             });
 
             clientFilter.innerHTML = '<option value="">الكل</option>'; // Reset options
@@ -392,7 +390,7 @@ firebase.auth().onAuthStateChanged((user) => {
                 option.value = client;
                 option.text = client;
                 clientFilter.appendChild(option);
-
+             
             });
         }
 
@@ -413,8 +411,8 @@ firebase.auth().onAuthStateChanged((user) => {
                         groupKey = data[key].الطلب;
                         const groupRow = `
                             <tr>
-                                <td colspan="30" style="background-color: #3498db; text-align: center;">
-                                    <strong>${groupKey},${data[key].العميل}
+                                <td colspan="30" style="background-color: #3498db; text-align: center;font-size: 30px;">
+                                    <strong>${groupKey}, ${data[key].العميل}, ${data[key].EDAT}
                                 </td>
                              
                             </tr>`;
@@ -473,8 +471,8 @@ firebase.auth().onAuthStateChanged((user) => {
     });
 }
 
-
-
+                
+            
 
         // Apply filters and display data
         function applyFilters() {
@@ -486,7 +484,7 @@ firebase.auth().onAuthStateChanged((user) => {
             }, (error) => {
                 console.error("Error: " + error.code);
                 alert("Error: " + error.code);
-
+            
             });
         }
 
@@ -638,7 +636,9 @@ function uploadFile(minOfPO_ID) {
 
                     // إزالة شريط التقدم بعد النجاح
                     document.getElementById(`upload-container-${minOfPO_ID}`).removeChild(progressBar);
-fileInput.value = '';
+
+                    // إعادة تعيين قيمة حقل الإدخال
+                    fileInput.value = '';
                 });
             }
         );
