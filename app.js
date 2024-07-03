@@ -24,7 +24,7 @@ document.getElementById('register').addEventListener('click', () => {
         .then((userCredential) => {
             const user = userCredential.user;
             console.log('User registered: ', user);
-            document.getElementById('user-info').innerText = Hello, ${user.email};
+            document.getElementById('user-info').innerText = `Hello, ${user.email}`;
 
             // Record user activity
             const userRef = database.ref('user_activities/' + user.uid);
@@ -49,7 +49,7 @@ document.getElementById('login').addEventListener('click', () => {
         .then((userCredential) => {
             const user = userCredential.user;
             console.log('User logged in: ', user);
-            document.getElementById('user-info').innerText = Hello, ${user.email};
+            document.getElementById('user-info').innerText = `Hello, ${user.email}`;
 
             // Record user activity
             const userRef = database.ref('user_activities/' + user.uid);
