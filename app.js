@@ -19,9 +19,9 @@ const database = firebase.database();
 // Login with Google
 document.getElementById('login').addEventListener('click', () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(result => {
+    auth.signInWithPopup(provider).then((result) => {
         const user = result.user;
-        document.getElementById('user-info').innerText = Hello, ${user.displayName};
+        document.getElementById('user-info').innerText = `Hello, ${user.displayName}`;
         
         // Record user activity
         const userRef = database.ref('user_activities/' + user.uid);
@@ -32,14 +32,14 @@ document.getElementById('login').addEventListener('click', () => {
         });
 
         startTrackingActivity(user.uid);
-    }).catch(error => {
+    }).catch((error) => {
         console.error("Error during login: ", error);
     });
 });
 
 // Start tracking user activity
 function startTrackingActivity(uid) {
-    ['mousemove', 'click', 'keypress'].forEach(event => {
+    ['mousemove', 'click', 'keypress'].forEach((event) => {
         window.addEventListener(event, () => {
             const userRef = database.ref('user_activities/' + uid);
             userRef.update({
