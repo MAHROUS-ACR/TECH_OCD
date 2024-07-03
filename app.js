@@ -1,15 +1,5 @@
 
 
-// Register new user
-document.getElementById('register').addEventListener('click', () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log('User registered: ', user);
-            document.getElementById('user-info').innerText = `Hello, ${user.email}`;
 
             // Record user activity
             const userRef = database.ref('user_activities/' + user.uid);
