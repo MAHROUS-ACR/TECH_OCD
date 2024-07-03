@@ -9,11 +9,11 @@
             });
 
             startTrackingActivity(user.uid);
-        })
+      
         .catch((error) => {
             console.error('Error registering user: ', error);
         });
-});
+
 
 // Login existing user
 document.getElementById('login').addEventListener('click', () => {
